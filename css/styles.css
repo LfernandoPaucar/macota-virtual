@@ -16,8 +16,11 @@ body {
 }
 
 #mascota{
-    width: 200px;
     height: auto;
+    position: absolute;
+    left: 100px;
+    top: 300px;
+    width: 200px;
 }
 
 #mensaje{
