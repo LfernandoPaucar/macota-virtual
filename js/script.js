@@ -11,19 +11,21 @@ const mascota = document.getElementById("mascota");
 let x = 100; // posición horizontal
 let y = 300; // posicion vertical
 let puntos = 0;
+let velocidadFruta = 1800;
+let energiaPerdida = 5;
 
 
-let imagenes = ["./mascota-imagen/cuyo-parado.png", "./mascota-imagen/cuyo-caminando.png"];
+let imagenes = ["./mascota-imagen/cuyo-parado.png", "./mascota-imagen/cuyo-caminando.png", "./mascota-imagen/cuyo-a-la-izquierda.png", "./mascota-imagen/cuyo-sentado.png"];
 
 document.addEventListener("keydown", (e) => {
-  const keys = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"];
+    const keys = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"];
   if (keys.includes(e.key)) e.preventDefault(); // evita scroll
 
   console.log("Tecla:", e.key); // verifica que llegan
-  if (e.key === "ArrowRight") moverDerecha();
-  if (e.key === "ArrowLeft")  moverIzquierda();
-  if (e.key === "ArrowUp")    moverArriba();
-  if (e.key === "ArrowDown")  moverAbajo();
+    if (e.key === "ArrowRight") moverDerecha();
+    if (e.key === "ArrowLeft")  moverIzquierda();
+    if (e.key === "ArrowUp")    moverArriba();
+    if (e.key === "ArrowDown")  moverAbajo();
 });
 
 function moverDerecha(){
@@ -38,7 +40,7 @@ function moverIzquierda(){
     x -= 5;
     aplicarLimites();
     mascota.style.left = x + "px";
-    mascota.src = imagenes[1];
+    mascota.src = imagenes[2];
     verificarColision();
 }
 
@@ -54,7 +56,7 @@ function moverAbajo(){
     y += 5;
     aplicarLimites();
     mascota.style.top = y + "px";
-    mascota.src = imagenes[0];
+    mascota.src = imagenes[3];
     verificarColision();
 }
 
@@ -102,7 +104,25 @@ function verificarColision() {
             puntos += 1;
             puntosSpan.textContent = puntos;
             colocarFruta();
+            aumentarEnergia(10);
+            verificarNivel();
         }
+    }
+}
+
+function verificarNivel(){
+    if(puntos >= 50){
+        velocidadFruta = 900;
+        energiaPerdida = 10;
+        mensaje.textContent = "¡Nivel 3! Modo experto 🔥";
+    } else if (puntos >= 25){
+        velocidadFruta = 1400;
+        energiaPerdida = 7;
+        mensaje.textContent = "¡Nivel 2! Ahora es más difícil 😼"
+    } else{
+        velocidadFruta = 1800;
+        energiaPerdida = 5;
+        mensaje.textContent = "¡Nivel 1! Vamos Cuyo 🐹"
     }
 }
 
@@ -111,4 +131,42 @@ window.addEventListener("load", () => {
     aplicarLimites();
     mascota.style.left = x + "px";
     mascota.style.top = y + "px";
+    aumentarEnergia(10);
 })
+
+let energia = 100;
+const energiaBarra = document.getElementById("energia-barra");
+
+actualizarEnergia();
+
+setInterval(reducirEnergia, 2000);
+
+function reducirEnergia (){
+    energia -= energiaPerdida;
+    if (energia < 0) energia = 0;
+    actualizarEnergia();
+
+    if(energia === 0){
+        mensaje.textContent = "Cuyo esta cansado";
+    }
+
+}
+
+
+function aumentarEnergia(cantidad) {
+    energia += cantidad;
+    if (energia > 100) energia = 100; // maximo 100
+    actualizarEnergia();
+}
+
+function actualizarEnergia(){
+    energiaBarra.style.width = energia + "%";
+
+    if(energia < 60){
+        energiaBarra.style.backgroundColor = "orange";
+    } else if(energia > 30){
+        energiaBarra.style.backgroundColor = "green";
+    } else {
+        energiaBarra.style.backgroundColor = "red";
+    }
+}
