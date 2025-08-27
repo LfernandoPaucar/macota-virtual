@@ -81,3 +81,27 @@ body {
     transition: width 0.3;
     color: #f0f8ff;
 }
+
+#btn-inicio, #btn-reiniciar{
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #9e3a0c;
+    color: white;
+    margin: 10px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+#btn-inicio:hover, #btn-reiniciar:hover{
+    background: #ca8150;
+    transform: scale(1.05s);
+}
+
+#btn-reiniciar{
+    background-color: #e63946;
+    display: none;
+}
+

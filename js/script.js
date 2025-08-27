@@ -18,6 +18,7 @@ let energiaPerdida = 5;
 let imagenes = ["./mascota-imagen/cuyo-parado.png", "./mascota-imagen/cuyo-caminando.png", "./mascota-imagen/cuyo-a-la-izquierda.png", "./mascota-imagen/cuyo-sentado.png"];
 
 document.addEventListener("keydown", (e) => {
+    if(!juegoActivo) return;
     const keys = ["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"];
   if (keys.includes(e.key)) e.preventDefault(); // evita scroll
 
@@ -137,17 +138,22 @@ window.addEventListener("load", () => {
 let energia = 100;
 const energiaBarra = document.getElementById("energia-barra");
 
-actualizarEnergia();
+//actualizarEnergia();
 
-setInterval(reducirEnergia, 2000);
+//setInterval(reducirEnergia, 2000);
 
 function reducirEnergia (){
+    if (!juegoActivo) return
+
     energia -= energiaPerdida;
     if (energia < 0) energia = 0;
     actualizarEnergia();
 
     if(energia === 0){
-        mensaje.textContent = "Cuyo esta cansado";
+        mensaje.textContent = "GAME OVER - Cuyo esta cansado";
+        juegoActivo = false;
+        clearInterval(energiaInterval);
+        btnReiniciar.style.display = "inline-block"
     }
 
 }
@@ -169,4 +175,39 @@ function actualizarEnergia(){
     } else {
         energiaBarra.style.backgroundColor = "red";
     }
+}
+
+let juegoActivo = false;
+let energiaInterval;
+
+// Botones
+
+const btnInicio = document.getElementById("btn-inicio");
+const btnReiniciar = document.getElementById("btn-reiniciar");
+
+btnInicio.addEventListener("click", iniciarJuego);
+btnReiniciar.addEventListener("click", reiniciarJuego);
+
+function iniciarJuego (){
+    if(juegoActivo) return;
+
+    juegoActivo = true;
+    energia = 100;
+    puntos = 0;
+    actualizarEnergia();
+    mensaje.textContent = "El juego comenzo";
+    btnInicio.style.display = "none";
+    btnReiniciar.style.display = "none";
+
+    energiaInterval = setInterval(reducirEnergia, 2000);
+    colocarFruta();
+}
+
+function reiniciarJuego(){
+    energia = 100;
+    puntos = 0;
+    actualizarEnergia();
+    mensaje.textContent = "¡Tu cuyo revive!";
+    btnReiniciar.style.display = "none";
+    btnInicio.style.display = "inline-block";
 }
